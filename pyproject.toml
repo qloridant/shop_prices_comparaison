@@ -10,6 +10,7 @@ python = "^3.11"
 django = "^5.1.2"
 requests = "^2.32.3"
 xmltodict = "^0.14.2"
+django-bootstrap5 = "^24.3"
 
 
 [build-system]
