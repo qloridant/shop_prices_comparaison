@@ -6,8 +6,9 @@ def shop_compare_summary(request):
     # Get user's selected location or shop type, then call OSM API
     selected_shops = []
     
-    shop_id_1 = request.GET.get('osm_id_shop_1') if request.GET.get('osm_id_shop_1') else '1392117416' # Get shop ID from query parameter
-    shop_id_2 = request.GET.get('osm_id_shop_2') if request.GET.get('osm_id_shop_2') else '1392117416' # Get shop ID from query parameter
+    shop_id_1 = request.GET.get('osm_id_shop_1') if request.GET.get('osm_id_shop_1') else '27108404' # Get shop ID from query parameter
+    shop_id_2 = request.GET.get('osm_id_shop_2') if request.GET.get('osm_id_shop_2') else '872934393' # Get shop ID from query parameter
+    product_barcode = request.GET.get('product_barcode') if request.GET.get('product_barcode') else '3178530410105' # Get shop ID from query parameter
         
     # Fetch shops from OpenStreetMap
     for shop_id in [shop_id_1, shop_id_2]:
@@ -25,13 +26,17 @@ def shop_compare_summary(request):
     
     # Receive list of selected shops and retrieve product prices from OFF
     comparison_data = []
-    summary_prices = {}
 
     for shop in selected_shops:
-        summary_prices = requests.get(f"https://prices.openfoodfacts.org/api/v1/prices/stats?location_osm_id={shop['id']}").json()
-        summary_prices['shop_id'] = shop['id']
-        comparison_data.append(summary_prices)
+        product = {}
+        prices = requests.get(f"https://prices.openfoodfacts.org/api/v1/prices?location_osm_id={shop['id']}&product_code={product_barcode}").json()
+        if prices['items']:
+            product['price'] = prices['items'][0]['price']
+            product_name = prices['items'][0]['product']['product_name']
+        product['shop_id'] = shop.get('id')
+        product['shop_name'] = shop.get('name', "Shop name not retrieved")
+        comparison_data.append(product)
         
-    return render(request, 'main/shop_summary.html', {'price_summaries': comparison_data})
+    return render(request, 'main/shop_summary.html', {'price_summaries': comparison_data, 'product_name': product_name})
 
 

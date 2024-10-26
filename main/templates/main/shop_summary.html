@@ -25,22 +25,17 @@
 
         <!-- Form for entering shop ID -->
         <form action="" method="get" class="row g-3">
-            <!-- <div class="form-group mx-sm-3 mb-2">
-                <div class="input-group mb-3">
-                    <div class="input-group">
-                        <span class="input-group-text">Shops</span>
-                        <input type="text" name="osm_id_shop_1" aria-label="Shop n°1 OSM id" class="form-control">
-                        <input type="text" name="osm_id_shop_2" aria-label="Shop n°2 OSM id" class="form-control">
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Compare prices !</button>
-                    </div>
-            </div> -->
             <div class="col-md-6">
-                <label for="input_shop_1" class="form-label">Shop n°1</label>
+                <label class="form-label">Shop n°1</label>
                 <input class="form-control" name="osm_id_shop_1" placeholder="OSM ID">
             </div>
             <div class="col-md-6">
-                <label for="inputPassword4" class="form-label">Shop n°2</label>
+                <label class="form-label">Shop n°2</label>
                 <input class="form-control" name="osm_id_shop_2" placeholder="OSM ID">
+            </div>
+            <div class="col-md-12">
+                <label class="form-label">Product</label>
+                <input class="form-control" name="product_barcode" placeholder="Product barcode">
             </div>
             <div class="col-12">
                 <button type="submit" class="w-100 btn btn-primary">Compare prices !</button>
@@ -48,35 +43,33 @@
             </form>
         </form>
 
-
         {% if price_summaries %}
-            <h4 class="mt-4">Price Summary for {{ shop_name }}</h4>
-            <table class="table table-hover mt-4">
-                <thead>
-                    <tr>
-                        <th>Shop</th>
-                        <th>Total Products</th>
-                        <th>Min Price (€)</th>
-                        <th>Max Price (€)</th>
-                        <th>Average Price (€)</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <h4 class="mt-4">Price Summary: </h4>
+        <table class="table table-hover mt-4">
+            <thead>
+                <!-- Header row for Shop Names -->
+                <tr>
+                    <th>Product</th>
                     {% for summary in price_summaries %}
-                        <tr>
-                            <td>{{ summary.shop_id }}</td>
-                            <td>{{ summary.price__count }}</td>
-                            <td>{{ summary.price__min }}</td>
-                            <td>{{ summary.price__max }}</td>
-                            <td>{{ summary.price__avg }}</td>
-                        </tr>
+                        <th>{{ summary.shop_name }}</th>
                     {% endfor %}
-                </tbody>
-            </table>
-        {% elif shop_id %}
-            <p class="text-danger mt-4">No shop found with the provided ID. Please try again.</p>
-        {% endif %}
-    </div>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Row for Prices -->
+                <tr>
+                    <th> {{ product_name }}</th>
+                    {% for summary in price_summaries %}
+                        <td>{{ summary.price }} €</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    
+    {% elif shop_id %}
+        <p class="text-danger mt-4">No shop found with the provided ID. Please try again.</p>
+    {% endif %}
+    
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
