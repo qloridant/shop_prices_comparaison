@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Price Summary</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="basic">
+        {% include "main/header.html" %}    
+    </div>
+
+    <div class="container mt-5">
+        <h2>Enter OSM shop id to vizualize price comparaison summary</h2>
+
+        <!-- Form for entering shop ID -->
+        <form action="" method="get" class="form-inline mt-3">
+            <div class="form-group mx-sm-3 mb-2">
+                <input type="text" class="form-control" name="osm_id_shop_1" placeholder="Shop n°1 OSM id">
+                <input type="text" class="form-control" name="osm_id_shop_2" placeholder="Shop n°2 OSM id">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Compare prices !</button>
+        </form>
+
+        {% if price_summaries %}
+            <h4 class="mt-4">Price Summary for {{ shop_name }}</h4>
+            <table class="table table-hover mt-4">
+                <thead>
+                    <tr>
+                        <th>Shop</th>
+                        <th>Total Products</th>
+                        <th>Min Price ($)</th>
+                        <th>Max Price ($)</th>
+                        <th>Average Price ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for summary in price_summaries %}
+                        <tr>
+                            <td>{{ summary.shop_id }}</td>
+                            <td>{{ summary.price__count }}</td>
+                            <td>{{ summary.price__min }}</td>
+                            <td>{{ summary.price__max }}</td>
+                            <td>{{ summary.price__avg }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% elif shop_id %}
+            <p class="text-danger mt-4">No shop found with the provided ID. Please try again.</p>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
