@@ -14,6 +14,28 @@
 
     {# Display django.contrib.messages as Bootstrap alerts #}
     {% bootstrap_messages %}
+    <style>
+        .receipt {
+            font-family: monospace;
+            border: 1px solid #333;
+            padding: 10px;
+            margin: 10px;
+            width: 150px;
+            text-align: left;
+        }
+        .receipt th {
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+        .receipt-item {
+            border-bottom: 1px dashed #999;
+            padding: 5px 0;
+        }
+        .product-name { font-size: 0.9em; font-weight: bold; }
+        .price { font-size: 0.85em; }
+        .barcode { font-size: 0.7em; color: #555; }
+    </style>
 </head>
 <body>
     <div class="basic">
@@ -21,7 +43,7 @@
     </div>
 
     <div class="container mt-5">
-        <h2>Enter OSM shop id to vizualize price comparaison summary</h2>
+        <h2>Enter OSM shop id to vizualize price comparison summary</h2>
 
         <!-- Form for entering shop ID -->
         <form action="" method="get" class="row g-3">
@@ -33,39 +55,52 @@
                 <label class="form-label">Shop n°2</label>
                 <input class="form-control" name="osm_id_shop_2" placeholder="OSM ID">
             </div>
-            <div class="col-md-12">
-                <label class="form-label">Product</label>
-                <input class="form-control" name="product_barcode" placeholder="Product barcode">
-            </div>
             <div class="col-12">
                 <button type="submit" class="w-100 btn btn-primary">Compare prices !</button>
             </div>
             </form>
         </form>
 
-        {% if price_summaries %}
-        <h4 class="mt-4">Price Summary: </h4>
+    {% if products %}
+    <div class="container mt-5">
+        <h2 class="text-center">Product Price Comparison by Shops</h2>
+        
+        {% load dict_utils %}
+
         <table class="table table-hover mt-4">
             <thead>
-                <!-- Header row for Shop Names -->
                 <tr>
                     <th>Product</th>
-                    {% for summary in price_summaries %}
-                        <th>{{ summary.shop_name }}</th>
+                    <th>Barcode</th>
+                    {% for shop in shops %}
+                        <th class="receipt">Shop ID: {{ shop.id }}</th>
                     {% endfor %}
                 </tr>
             </thead>
             <tbody>
-                <!-- Row for Prices -->
-                <tr>
-                    <th> {{ product_name }}</th>
-                    {% for summary in price_summaries %}
-                        <td>{{ summary.price }} €</td>
-                    {% endfor %}
-                </tr>
+                {% for barcode, product_data in products.items %}
+                    <tr>
+                        <td class="product-name">{{ product_data.name }}</td>
+                        <td class="barcode">{{ barcode }}</td>
+        
+                        {% for shop in shops %}
+                            <td class="receipt-item">
+                                
+                                {% with shop_price=product_data.prices|get_item:shop.id %}
+                                    {% if shop_price %}
+                                        {{ shop_price }} €
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
-    
+        
+    </div>
     {% elif shop_id %}
         <p class="text-danger mt-4">No shop found with the provided ID. Please try again.</p>
     {% endif %}
