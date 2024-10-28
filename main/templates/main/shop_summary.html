@@ -16,25 +16,43 @@
     {% bootstrap_messages %}
     <style>
         .receipt {
-            font-family: monospace;
-            border: 1px solid #333;
-            padding: 10px;
-            margin: 10px;
-            width: 150px;
-            text-align: left;
+            font-family: monospace;  /* Monospaced font for receipt look */
+            padding: 10px;           /* Padding for the outer table */
+            margin: 10px;            /* Margin for the outer table */
+        }
+        .receipt thead {
+            border-bottom: 2px dashed #333;  /* Bold bottom border for header */
         }
         .receipt th {
             font-weight: bold;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
+            border-bottom: 2px dashed #333;  /* Bold bottom border for header */
         }
-        .receipt-item {
-            border-bottom: 1px dashed #999;
-            padding: 5px 0;
+        .receipt td {
+            border-bottom: 2px dashed #333;  /* Bold bottom border for header */
         }
-        .product-name { font-size: 0.9em; font-weight: bold; }
-        .price { font-size: 0.85em; }
-        .barcode { font-size: 0.7em; color: #555; }
+        .receipt tbody tr .receipt-item {
+            border-bottom: 2px dashed #333;  /* Dashed border for receipt items */
+            padding: 5px 0;                  /* Padding for receipt items */
+            font-size: 0.9em;
+            font-style: italic;  
+        }
+        .receipt tbody tr {
+            border-bottom: 1px solid transparent;  /* Prevent Bootstrap from overriding */
+        }
+        .product-name {
+            font-size: 0.9em;
+            font-weight: bold;               /* Bold product names */
+        }
+        .barcode {
+            font-size: 0.8em;                /* Smaller barcode text */
+            color: #555;                     /* Grey color for barcode */
+        }
+        .shop-id {
+            font-size: 0.8em;                /* Smaller shop ID text */
+        }
+        .cheapest {
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -67,15 +85,38 @@
         
         {% load dict_utils %}
 
-        <table class="table table-hover mt-4">
+
+        <table class="table table-hover mt-4 receipt">
             <thead>
+                {% if shop_products_summary %}
                 <tr>
-                    <th>Product</th>
-                    <th>Barcode</th>
+                    <th>Number of lines </th>
+                    <th>{{ shop_products_summary.len }}</th>
+                </tr>
+                {% endif %}
+                <tr>
+                    <th>Shops</th>
+                    <th></th>
                     {% for shop in shops %}
-                        <th class="receipt">Shop ID: {{ shop.id }}</th>
+                        <th class="shop-id">{{ shop.name }}</th>
                     {% endfor %}
                 </tr>
+                {% if shop_products_summary %}
+                <tr>
+                    <th>Sold total </th>
+                    <th></th>
+                    {% for shop in shops %}
+                    {% with sum_prices=shop_products_summary.prices|get_item:shop.id %}
+                    <td class="receipt-item">{{ sum_prices.sum_prices }} €</td>
+                    {% endwith %}
+                    {% endfor %}
+                </tr>
+                {% endif %}
+                <tr>
+                    <th>Products</th>
+                    <th>Barcodes</th>
+                </tr>
+
             </thead>
             <tbody>
                 {% for barcode, product_data in products.items %}
@@ -87,11 +128,15 @@
                             <td class="receipt-item">
                                 
                                 {% with shop_price=product_data.prices|get_item:shop.id %}
-                                    {% if shop_price %}
-                                        {{ shop_price }} €
+                                {% if shop_price %}
+                                    {% if product_data.cheapest == shop.id %}
+                                    <p class='cheapest'>{{ shop_price }} € </p>
                                     {% else %}
-                                        N/A
+                                        {{ shop_price }} €
                                     {% endif %}
+                                {% else %}
+                                N/A
+                                {% endif %}
                                 {% endwith %}
                             </td>
                         {% endfor %}
@@ -104,7 +149,10 @@
     {% elif shop_id %}
         <p class="text-danger mt-4">No shop found with the provided ID. Please try again.</p>
     {% endif %}
-    
+
+    <div class="basic">
+        {% include "main/footer.html" %}    
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
