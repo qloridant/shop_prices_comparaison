@@ -46,12 +46,9 @@
             font-size: 0.9em;
             font-weight: bold;               /* Bold product names */
         }
-        .barcode {
+        .barcode .shop-id{
             font-size: 0.8em;                /* Smaller barcode text */
             color: #555;                     /* Grey color for barcode */
-        }
-        .shop-id {
-            font-size: 0.8em;                /* Smaller shop ID text */
         }
         .cheapest {
             color: green;
@@ -67,16 +64,14 @@
         <h2>Product Price Comparison by Shops</h2>
 
         <!-- Form for entering shop ID -->
-        <form action="" method="get" class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label">Shop n°1</label>
-                <input class="form-control" name="osm_id_shop_1" placeholder="OSM ID">
+        <form action="" method="get" class="input-group row g-3">
+            <div class="col-md-4">
+                <input class="form-control" name="osm_id_shop_1" placeholder="Identifier OSM for shop #1">
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Shop n°2</label>
-                <input class="form-control" name="osm_id_shop_2" placeholder="OSM ID">
+            <div class="col-md-4">
+                <input class="form-control" name="osm_id_shop_2" placeholder="Identifier OSM for shop #2">
             </div>
-            <div class="col-12">
+            <div class="col-md-4">
                 <button type="submit" class="w-100 btn btn-primary">Compare prices !</button>
             </div>
             </form>
@@ -85,16 +80,15 @@
     {% if products %}
     <div class="container mt-5">        
         {% load dict_utils %}
-
+        {% if shop_products_summary %}
+        <div class="receipt-item mt-4">
+        # Number of lines: {{ shop_products_summary.len }}
+        </div>
+        {% endif %}
 
         <table class="table table-hover mt-4 receipt">
             <thead>
-                {% if shop_products_summary %}
-                <tr>
-                    <th>Number of lines </th>
-                    <th>{{ shop_products_summary.len }}</th>
-                </tr>
-                {% endif %}
+
                 <tr>
                     <th>Shops</th>
                     <th></th>
