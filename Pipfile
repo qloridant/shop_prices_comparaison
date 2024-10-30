@@ -10,6 +10,7 @@ gunicorn = "*"
 requests = "*"
 django-environ = "*"
 dj-static = "*"
+requests-cache = "*"
 
 [dev-packages]
 
