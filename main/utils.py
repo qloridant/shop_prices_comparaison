@@ -1,7 +1,7 @@
 import requests
 
 def get_open_prices(session, shop_id):
-    url = f"https://prices.openfoodfacts.org/api/v1/prices?location_id={shop_id}&size=100&order_by=-date"
+    url = f"https://prices.openfoodfacts.org/api/v1/prices?location_osm_id={shop_id}&size=100&order_by=-date"
     first_page = session.get(url).json()
     yield first_page
     num_pages = first_page['pages']

@@ -7,8 +7,8 @@ def shop_compare_summary(request):
     selected_shops = []
     
     # shop_id_1 = request.GET.get('osm_id_shop_1') if request.GET.get('osm_id_shop_1') else '27108404' # Get shop ID from query parameter Intermarché
-    shop_id_1 = request.GET.get('osm_id_shop_1') if request.GET.get('osm_id_shop_1') else '154' # Get shop ID from query parameter Intermarché
-    shop_id_2 = request.GET.get('osm_id_shop_2') if request.GET.get('osm_id_shop_2') else '3' # Get shop ID from query parameter Auchan
+    shop_id_1 = request.GET.get('osm_id_shop_1') if request.GET.get('osm_id_shop_1') else '872934393' # Get shop ID from query parameter Intermarché
+    shop_id_2 = request.GET.get('osm_id_shop_2') if request.GET.get('osm_id_shop_2') else '27108404' # Get shop ID from query parameter Auchan
         
     # Fetch shops from OpenStreetMap
     for shop_id in [shop_id_1, shop_id_2]:
