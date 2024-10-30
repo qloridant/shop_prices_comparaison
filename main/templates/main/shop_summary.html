@@ -15,8 +15,11 @@
     {# Display django.contrib.messages as Bootstrap alerts #}
     {% bootstrap_messages %}
     <style>
+        body {
+            font-family: 'Courier New', monospace;  /* Monospaced font for receipt look */
+        }
         .receipt {
-            font-family: monospace;  /* Monospaced font for receipt look */
+            font-family: 'Courier New', monospace;  /* Monospaced font for receipt look */
             padding: 10px;           /* Padding for the outer table */
             margin: 10px;            /* Margin for the outer table */
         }
