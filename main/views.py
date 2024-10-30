@@ -13,19 +13,9 @@ def shop_compare_summary(request):
     # Fetch shops from OpenStreetMap
     for shop_id in [shop_id_1, shop_id_2]:
         shop = {'id': shop_id}
-        # response = requests.get(f"https://www.openstreetmap.org/api/0.6/node/{shop_id}")
-        # data = xmltodict.parse(response.content)['osm']['node'] if response.status_code == 200 else {}
-        # if 'tag' in data.keys():
-        #     for node in data['tag']:
-        #         if node['@k'] == 'name':
-        #             shop['name'] = node['@v']
-        #         if node['@k'] == 'addr:city':
-        #             shop['city'] = node['@v']
-        #         pass
         selected_shops.append(shop)
     
     # Receive list of selected shops and retrieve product prices from OFF
-
     shop_products = {}
     products = {}
     for shop in selected_shops:
@@ -34,7 +24,7 @@ def shop_compare_summary(request):
             for price in prices['items']:
                 if not shop.get('name'):
                     location = price.get('location')
-                    shop['name'] = location['osm_name']
+                    shop['name'] = location['osm_display_name']
                 
                 product = price.get('product')
                 if not product:
