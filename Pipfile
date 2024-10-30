@@ -9,6 +9,7 @@ django-bootstrap5 = "*"
 gunicorn = "*"
 requests = "*"
 django-environ = "*"
+dj-static = "*"
 
 [dev-packages]
 

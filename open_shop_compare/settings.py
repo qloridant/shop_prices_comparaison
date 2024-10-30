@@ -12,23 +12,27 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import environ
+import os
 
 root = environ.Path(__file__) - 2  # get root of the project
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(root())
 
-# handle .env file for local development
+# env = environ.Env(
+#     # set casting, default value
+#     DEBUG=(bool, False)
+# )
 env_path = BASE_DIR / ".env"
-if env_path.is_file():
-    environ.Env.read_env(str(env_path))  # reading .env file
+environ.Env.read_env(str(env_path))
+
 
 # use an environment variable to set a secret and fetch it with django-environ
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str("SECRET_KEY")
-DEBUG = env.bool("DEBUG", default=False)
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = os.environ.get("DEBUG", default=False)
 
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1", "localhost"])
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", default=["127.0.0.1", "localhost"])
 
 
 # Application definition

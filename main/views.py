@@ -1,6 +1,5 @@
 import requests
 from django.shortcuts import render
-import xmltodict
 from .utils import keep_products_intersection_shops, summarize_shop_products, get_open_prices
 
 def shop_compare_summary(request):
