@@ -37,7 +37,7 @@
             border-bottom: 2px dashed #333;  /* Dashed border for receipt items */
             padding: 5px 0;                  /* Padding for receipt items */
             font-size: 0.9em;
-            font-style: italic;  
+            font-style: italic;
         }
         .receipt tbody tr {
             border-bottom: 1px solid transparent;  /* Prevent Bootstrap from overriding */
@@ -102,7 +102,7 @@
                     <th></th>
                     {% for shop in shops %}
                     {% with sum_prices=shop_products_summary.prices|get_item:shop.id %}
-                    <td class="receipt-item">{{ sum_prices.sum_prices }} €</td>
+                    <td class="receipt-item text-center">{{ sum_prices.sum_prices }} €</td>
                     {% endwith %}
                     {% endfor %}
                 </tr>
@@ -120,7 +120,7 @@
                         <td class="barcode">{{ barcode }}</td>
         
                         {% for shop in shops %}
-                            <td class="receipt-item">
+                            <td class="receipt-item text-center">
                                 
                                 {% with shop_price=product_data.prices|get_item:shop.id %}
                                 {% if shop_price %}
