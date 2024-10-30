@@ -8,7 +8,7 @@ django = "*"
 django-bootstrap5 = "*"
 gunicorn = "*"
 requests = "*"
-environ = "*"
+django-environ = "*"
 
 [dev-packages]
 
