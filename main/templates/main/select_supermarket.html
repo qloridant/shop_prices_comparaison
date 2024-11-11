@@ -65,6 +65,7 @@
         <form action="{% url 'search_supermarkets' %}" method="get" class="input-group row g-3">
             <input type="text" name="query" value="{{ query }}" placeholder="Search for supermarkets" required>
             <input type="hidden" name="stage" value="{{ stage }}">
+            <input type="hidden" name="first_supermarket_id" value="{{ first_supermarket_id }}">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
     </div>
@@ -84,6 +85,7 @@
                 {% endfor %}
             </ul>
             <input type="hidden" name="stage" value="{{ stage }}">
+            <input type="hidden" name="first_supermarket_id" value="{{ first_supermarket_id }}">
             <button type="submit">Select</button>
         </form>
     </div>

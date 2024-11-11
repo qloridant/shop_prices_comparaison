@@ -1,16 +1,14 @@
 import requests
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .utils import keep_products_intersection_shops, summarize_shop_products, get_open_prices, search_osm
 from django.http import HttpResponse
 
-def shops_compare_summary(request):
+def shops_compare_summary(request, supermarkets):
     # Get user's selected location or shop type, then call OSM API
     selected_shops = []
     
-    shop_id_1 = int(request.session.get('first_supermarket_id'))
-    shop_id_2 = int(request.session.get('second_supermarket_id'))
-    selected_shops = [{'id': shop_id_1}, 
-                       {'id': shop_id_2}]
+    for supermarket in supermarkets:
+        selected_shops.append({'id': supermarket})
 
     # Receive list of selected shops and retrieve product prices from OFF
     shop_products = {}
@@ -55,14 +53,15 @@ def search_supermarkets(request):
     # Determine which search phase (first or second)
     search_stage = request.GET.get('stage', '1')
     query = request.GET.get('query', 'supermarket')
-    
+    first_supermarket_id = request.GET.get('first_supermarket_id', '')
+
      # If no query is provided, prompt the user to enter one
     if not query:
-        return render(request, 'main/search_form.html', {'stage': search_stage})
+        return render(request, 'main/search_form.html', {'stage': search_stage, 'first_supermarket_id': first_supermarket_id})
     
     # Perform the search
     supermarkets = search_osm(query)
-    context = {'supermarkets': supermarkets, 'stage': search_stage}
+    context = {'supermarkets': supermarkets, 'stage': search_stage, 'first_supermarket_id': first_supermarket_id}
     return render(request, 'main/select_supermarket.html', context)
 
 def select_supermarket(request):
@@ -72,12 +71,12 @@ def select_supermarket(request):
 
         if search_stage == "1":
             # Store the first selection in the session and redirect for the second selection
-            request.session['first_supermarket_id'] = selected_id
-            context = {'stage': '2'}
+            context = {'stage': '2', 'first_supermarket_id': selected_id}
             return render(request, 'main/select_supermarket.html', context)
     
         elif search_stage == "2":
             # Store the second selection and redirect to the summary
-            request.session['second_supermarket_id'] = selected_id
-            return shops_compare_summary(request)
+            first_supermarket_id = request.POST.get('first_supermarket_id')
+            context = {'second_supermarket_id': selected_id}
+            return shops_compare_summary(request, [first_supermarket_id, selected_id])
     return HttpResponse("No supermarket selected.")
