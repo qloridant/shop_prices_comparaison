@@ -1,10 +1,9 @@
-# ShopCompare/urls.py
-
-from django.contrib import admin
-from django.urls import path, include
+# urls.py
+from django.urls import path
+from main import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('main.urls')),  # Includes URL patterns from the `main` app
+    path('', views.landing_page, name='landing_page'),
+    path('search/', views.search_supermarkets, name='search_supermarkets'),
+    path('select_supermarket/', views.select_supermarket, name='select_supermarket'),
 ]
-

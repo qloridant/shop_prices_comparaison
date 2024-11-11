@@ -1,4 +1,23 @@
 import requests
+from urllib.parse import quote_plus
+
+def search_osm(query):
+    url = "https://photon.komoot.io/api"
+    params = {
+        "q": query,  # e.g., "supermarket near park"
+        "osm_tag": ["shop", "amenity"],
+        "limit": 10
+    }
+    headers = {
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Cache-Control': 'no-cache'
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    print(response.url)
+    if response.status_code == 200:
+        return response.json().get('features', [])
+    return []
 
 def get_open_prices(session, shop_id):
     url = f"https://prices.openfoodfacts.org/api/v1/prices?location_osm_id={shop_id}&size=100&order_by=-date"
@@ -21,6 +40,7 @@ def keep_products_intersection_shops(shops, shop_products):
                 shop_products[barcode]['cheapest'] = shops[1]["id"]
             common_shop_products[barcode] = shop_products[barcode]
     return common_shop_products
+
 
 def summarize_shop_products(shops, shop_products):
     summary = {}

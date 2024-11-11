@@ -4,5 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.shop_compare_summary, name='shop_summary'),  # Root URL for the combined view
+    path('search/', views.search_supermarkets, name='search_supermarkets'),
+    path('select_supermarket/', views.select_supermarket, name='select_supermarket'),
+    path('summary/', views.summary_selection, name='summary_selection'),
 ]

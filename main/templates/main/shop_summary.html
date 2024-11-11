@@ -60,22 +60,9 @@
         {% include "main/header.html" %}    
     </div>
 
+    
     <div class="container mt-5">
-        <h2>Product Price Comparison by Shops</h2>
 
-        <!-- Form for entering shop ID -->
-        <form action="" method="get" class="input-group row g-3">
-            <div class="col-md-4">
-                <input class="form-control" name="osm_id_shop_1" placeholder="Identifier OSM for shop #1">
-            </div>
-            <div class="col-md-4">
-                <input class="form-control" name="osm_id_shop_2" placeholder="Identifier OSM for shop #2">
-            </div>
-            <div class="col-md-4">
-                <button type="submit" class="w-100 btn btn-primary">Compare prices !</button>
-            </div>
-            </form>
-        </form>
 
     {% if products %}
     <div class="container mt-5">        
@@ -141,8 +128,8 @@
         </table>
         
     </div>
-    {% elif shop_id %}
-        <p class="text-danger mt-4">No shop found with the provided ID. Please try again.</p>
+    {% else%}
+        <p class="text-danger mt-4">No products found to compare these shops...</p>
     {% endif %}
 
     <div class="basic">

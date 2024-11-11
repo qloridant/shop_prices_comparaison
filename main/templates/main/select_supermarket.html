@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Price Summary</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    {# Load the tag library #}
+    {% load django_bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+    <style>
+        body {
+            font-family: 'Courier New', monospace;  /* Monospaced font for receipt look */
+        }
+        .receipt {
+            font-family: 'Courier New', monospace;  /* Monospaced font for receipt look */
+            padding: 10px;           /* Padding for the outer table */
+            margin: 10px;            /* Margin for the outer table */
+        }
+        .receipt thead {
+            border-bottom: 2px dashed #333;  /* Bold bottom border for header */
+        }
+        .receipt th {
+            font-weight: bold;
+            border-bottom: 2px dashed #333;  /* Bold bottom border for header */
+        }
+        .receipt td {
+            border-bottom: 2px dashed #333;  /* Bold bottom border for header */
+        }
+        .receipt tbody tr .receipt-item {
+            border-bottom: 2px dashed #333;  /* Dashed border for receipt items */
+            padding: 5px 0;                  /* Padding for receipt items */
+            font-size: 0.9em;
+            font-style: italic;
+        }
+        .receipt tbody tr {
+            border-bottom: 1px solid transparent;  /* Prevent Bootstrap from overriding */
+        }
+        .product-name {
+            font-size: 0.9em;
+            font-weight: bold;               /* Bold product names */
+        }
+        .barcode .shop-id{
+            font-size: 0.8em;                /* Smaller barcode text */
+            color: #555;                     /* Grey color for barcode */
+        }
+        .cheapest {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="basic">
+    {% include "main/header.html" %}    
+    </div>
+
+    <div class="container mt-5">
+        <h2>Search for Supermarket {{ stage }}</h2>
+        <form action="{% url 'search_supermarkets' %}" method="get" class="input-group row g-3">
+            <input type="text" name="query" value="{{ query }}" placeholder="Search for supermarkets" required>
+            <input type="hidden" name="stage" value="{{ stage }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+    {% if supermarkets %}
+    <div class="container mt-5">
+        <form action="{% url 'select_supermarket' %}" method="post" class="input-group row g-3">
+            {% csrf_token %}
+            <ul>
+                {% for supermarket in supermarkets %}
+                    <li>
+                        <label>
+                            <input type="radio" name="supermarket_id" value="{{ supermarket.properties.osm_id }}">
+                            {{ supermarket.properties.name }} - {{ supermarket.properties.city }} - {{ supermarket.properties.postcode }} - {{ supermarket.properties.street }} - {{ supermarket.properties.osm_id }}
+                            
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+            <input type="hidden" name="stage" value="{{ stage }}">
+            <button type="submit">Select</button>
+        </form>
+    </div>
+    {% endif %}
+</body>
+
+<div class="basic">
+    {% include "main/footer.html" %}    
+</div>
