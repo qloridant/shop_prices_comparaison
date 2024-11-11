@@ -41,19 +41,19 @@ def shops_compare_summary(request):
     return render(request, 'main/shop_summary.html', {'shops': selected_shops, 'products': shop_products, 'shop_products_summary': shop_products_summary})
 
 def landing_page(request):
-    request.session['search_stage'] = '1'
     if request.method == "POST":
         # Get the query from the form
         query = request.POST.get("query", "supermarket")
 
         # Redirect to the search page with the first search stage
-        return render(request, 'main/select_supermarket.html', {'query': query, 'stage': '1'})
-    return render(request, 'main/select_supermarket.html', {'stage': '1'})
+        context = {'query': query, 'stage': '1'}
+    else:
+        context = {'stage': '1'}
+    return render(request, 'main/select_supermarket.html', context)
 
 def search_supermarkets(request):
     # Determine which search phase (first or second)
-    search_stage = request.session.get('search_stage')
-
+    search_stage = request.GET.get('stage', '1')
     query = request.GET.get('query', 'supermarket')
     
      # If no query is provided, prompt the user to enter one
@@ -62,19 +62,19 @@ def search_supermarkets(request):
     
     # Perform the search
     supermarkets = search_osm(query)
-    
-    return render(request, 'main/select_supermarket.html', {'supermarkets': supermarkets, 'stage': search_stage})
+    context = {'supermarkets': supermarkets, 'stage': search_stage}
+    return render(request, 'main/select_supermarket.html', context)
 
 def select_supermarket(request):
     if request.method == "POST":
         selected_id = request.POST.get("supermarket_id")
-        search_stage = request.session.get('search_stage')
+        search_stage = request.POST.get('stage', '1')
 
         if search_stage == "1":
             # Store the first selection in the session and redirect for the second selection
             request.session['first_supermarket_id'] = selected_id
-            request.session['search_stage'] = '2'
-            return render(request, 'main/select_supermarket.html', {'stage': request.session['search_stage']})
+            context = {'stage': '2'}
+            return render(request, 'main/select_supermarket.html', context)
     
         elif search_stage == "2":
             # Store the second selection and redirect to the summary
