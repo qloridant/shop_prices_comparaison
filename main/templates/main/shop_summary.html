@@ -17,6 +17,7 @@
     <style>
         body {
             font-family: 'Courier New', monospace;  /* Monospaced font for receipt look */
+            padding-bottom: 100px; /* Adjust based on footer height */
         }
         .receipt {
             font-family: 'Courier New', monospace;  /* Monospaced font for receipt look */
@@ -52,6 +53,9 @@
         }
         .cheapest {
             color: green;
+        }
+        ul {
+            list-style-type: none;
         }
     </style>
 </head>
@@ -129,7 +133,7 @@
         
     </div>
     {% else%}
-        <p class="text-danger mt-4">No products found to compare these shops...</p>
+        <p class="text-danger mt-4">No products found to compare these shops... Try another <a href='/'>combinaison</a> ?</p>
     {% endif %}
 
     <div class="basic">

@@ -17,6 +17,7 @@
     <style>
         body {
             font-family: 'Courier New', monospace;  /* Monospaced font for receipt look */
+            padding-bottom: 60px; /* Adjust based on footer height */
         }
         .receipt {
             font-family: 'Courier New', monospace;  /* Monospaced font for receipt look */
@@ -53,17 +54,23 @@
         .cheapest {
             color: green;
         }
+        ul {
+            list-style-type: none;
+        }
     </style>
 </head>
 <body>
     <div class="basic">
     {% include "main/header.html" %}    
     </div>
+    <div class="container mt-5 alert alert-secondary">
+        Search for two different supermarkets in order to compare their prices over a list of common products. 
+    </div>
 
     <div class="container mt-5">
-        <h2>Search for Supermarket {{ stage }}</h2>
+        <h2>Select supermarket #{{ stage }}</h2>
         <form action="{% url 'search_supermarkets' %}" method="get" class="input-group row g-3">
-            <input type="text" name="query" value="{{ query }}" placeholder="Search for supermarkets" required>
+            <input type="text" name="query" value="{{ query }}" placeholder="Type here to search for a supermarket..." required class="input-group-text">
             <input type="hidden" name="stage" value="{{ stage }}">
             <input type="hidden" name="first_supermarket_id" value="{{ first_supermarket_id }}">
             <button type="submit" class="btn btn-primary">Search</button>
@@ -75,18 +82,22 @@
             {% csrf_token %}
             <ul>
                 {% for supermarket in supermarkets %}
-                    <li>
-                        <label>
-                            <input type="radio" name="supermarket_id" value="{{ supermarket.properties.osm_id }}">
-                            {{ supermarket.properties.name }} - {{ supermarket.properties.city }} - {{ supermarket.properties.postcode }} - {{ supermarket.properties.street }} - {{ supermarket.properties.osm_id }}
-                            
-                        </label>
-                    </li>
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <li>
+                            <label>
+                                <input type="radio" name="supermarket_id" value="{{ supermarket.properties.osm_id }}">
+                                {{ supermarket.properties.name }} - {{ supermarket.properties.city }} - {{ supermarket.properties.postcode }} - {{ supermarket.properties.street }} - {{ supermarket.properties.osm_id }}
+                                
+                            </label>
+                        </li>
+                    </div>
+                </div>
                 {% endfor %}
             </ul>
             <input type="hidden" name="stage" value="{{ stage }}">
             <input type="hidden" name="first_supermarket_id" value="{{ first_supermarket_id }}">
-            <button type="submit">Select</button>
+            <button type="submit" class="btn btn-primary">Select</button>
         </form>
     </div>
     {% endif %}
